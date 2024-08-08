@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3"></script>
+</head>
+<body>
+    <div id="app">
+              <!-- 계산된 프로퍼티-->
+        이름<input type="text" v-model="irum" /><br>
+        자바<input type="text" v-model.number="java" /><br>
+        리액트<input type="text" v-model.number="React" /><br>
+        뷰<input type="text" v-model.number="Vue" /><br>
+        <button @click="myChange1">확인</button><br>
+       <ul>
+        <li v-bind:value="totals"v-for="(to, index) in totals" :key="index">
+            {{to.irum}} {{to.jav}}{{to.React}}{{to.Vue}}
+        </li>
+       </ul>
+    </div>
+    <script src="ex8ex1.js"></script>
+</body>
+</html>

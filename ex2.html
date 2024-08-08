@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>컴포넌트 사용 범위</title>
+    <script src="https://unpkg.com/vue@3"></script>
+    <style>
+      :root {
+  --card-height: 300px;
+  --card-width: calc(var(--card-height) / 1.5);
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #191c29;
+}
+.card {
+  width: var(--card-width);
+  height: var(--card-height);
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 0 36px;
+  perspective: 2500px;
+  margin: 0 50px;
+}
+
+.cover-image {
+  width: 200%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.wrapper {
+  transition: all 0.5s;
+  position: absolute;
+  width: 100%;
+  z-index: -1;
+}
+
+.card:hover .wrapper {
+  transform: perspective(900px) translateY(-5%) rotateX(25deg) translateZ(0);
+  box-shadow: 2px 35px 32px -8px rgba(0, 0, 0, 0.75);
+  -webkit-box-shadow: 2px 35px 32px -8px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 2px 35px 32px -8px rgba(0, 0, 0, 0.75);
+}
+
+.wrapper::before,
+.wrapper::after {
+  content: "";
+  opacity: 0;
+  width: 100%;
+  height: 80px;
+  transition: all 0.5s;
+  position: absolute;
+  left: 0;
+}
+.wrapper::before {
+  top: 0;
+  height: 100%;
+  background-image: linear-gradient(
+    to top,
+    transparent 46%,
+    rgba(12, 13, 19, 0.5) 68%,
+    rgba(12, 13, 19) 97%
+  );
+}
+.wrapper::after {
+  bottom: 0;
+  opacity: 1;
+  background-image: linear-gradient(
+    to bottom,
+    transparent 46%,
+    rgba(12, 13, 19, 0.5) 68%,
+    rgba(12, 13, 19) 97%
+  );
+}
+
+.card:hover .wrapper::before,
+.wrapper::after {
+  opacity: 1;
+}
+
+.card:hover .wrapper::after {
+  height: 120px;
+}
+.title {
+  width: 100%;
+  transition: transform 0.5s;
+}
+.card:hover .title {
+  transform: translate3d(0%, -50px, 100px);
+}
+
+.character {
+  width: 100%;
+  opacity: 0;
+  transition: all 0.5s;
+  position: absolute;
+  z-index: -1;
+}
+
+.card:hover .character {
+  opacity: 1;
+  transform: translate3d(0%, -30%, 100px);
+}
+    </style>
+  </head>
+  <body>
+    <a href="https://www.mythrillfiction.com/the-dark-rider" alt="Mythrill" target="_blank">
+      <div class="card">
+        <div class="wrapper">
+          <img src="data:image/jpeg;base64,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" class="cover-image" />
+        </div>
+        <img src="https://ggayane.github.io/css-experiments/cards/force_mage-title.png" class="title" />
+        <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxISEBUQEhIVFRUVEBUQFRUVDw8PFRUPFRUWFhUVFRUYHSggGBolGxUVITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OGA8QFisdHyYrKy0rLS0rLSstLS0tKy0rLS0tLS0rKy0tLS0tLS0tLS0tLSsrLS0tLSstLSstKy0tLf/AABEIAP0AxwMBIgACEQEDEQH/xAAbAAACAwEBAQAAAAAAAAAAAAABAgAEBQMGB//EADoQAAIBAgQDBgQFAQkBAQAAAAABAgMRBBIhMQVBUQYiYXGBkROhscEyQtHw8ZIUFSNDUmJyguEWB//EABgBAQADAQAAAAAAAAAAAAAAAAABAgME/8QAIhEBAQACAgICAwEBAAAAAAAAAAECEQMxEiFRYSIyQXET/9oADAMBAAIRAxEAPwD5gkMBBJESCRIIBQwEMBCEFqTS1f8APkA4SpVxqjy92l9LlPEYxzXRdFd6ePUC3XxvKCzPr+W/nzKNXFT51UvCKze+hzVKTsnt7W9EPU4c/wArTaV7bafoQFjjpr/Mv/1/8LUMVnWVyi30as30aaejMtqUfmjpCm367Abka+iur35xs0n4nWE09n9jJw1Wzsn3W7uPK6V7ro/Au5ua9Fzs+j6Ei3YByo1r6NWa9mns14Ha4AsBjCyAVgHFaAVitDtCMBbkGIBAgCAUNYERkBNjn8dNd1p+WuvidWihjcLH8Si+t1KwDPH20lFr0uivWxad25eSSf1ZRddracv6mvuc277tsgdata69bc9g06be2/0XUWEL81620Rp4XDSfdtaPJc5NLd+G+n2A4UZVI6xbXOzjpLry0YJ8QldTtZp62uteh3x0VBaJ3fN3t8zLlVb5/wAAatemp2nbSST6Wvpbw5+5zp0LaPopK/8AT9be4tGranZ9F72zL52Onxk4p7PLq/DNFv6fUCvVaUrvk035frc50sS/iZuTe3RWsl7WGx8rqPXXN4vQmDwTm+iW7/e4FqvKUe/yvZeW7/fgCjjJOVm7/Jj4yN0oxalrfSSb+W3uZtSm48re4S36NW+j3tfzOjMbBY3W0n4pt/mNV4mFk8y18Vf2JQewGiRd9QgLYRo6CSAUhEEJAYVDBAxGBEZAFmNxPGX7iXnsa9VOzS/gw+J01Fxiv9N2+bbfP2ApBIQgdlU0Styt82zTwOJSWvstbv8A3PYx7GtgqTjHM1d3tFPr5cvqEuHEYO93bXZFOKNyjwerUd3dt+xqPslK25S5yNJx5V5WSbbfUlKnLbwsvW56Wn2flGVpJ28E9ttzfwfZNtJ2tpz0d/LkReSE4q+dum2+96/UuQqxssz0tpFfVntsb2QtHTfnbmeX4nwWdJ3cHb39iZySmXFlGd8S700a20bt7C16kpJ3a9ov7aFmGq8utvk/1Ozp50013lp0duWvQvtnphuKtu7+V17mnwqsrKLS3teyuny9H9iniMMldXs+j2fryOeEbU15pfPT5gekYGEBKCisdisBLECyABBsAIDIYCGAKMXjcbTT8Le38m2jJ47B9x8tV6vX7MDICkQKIHahG7SXqer4Xgb200MrgfD3LvPbfx9T2OFobGWeTfjw/tX+G4ZaM26NIp4GmbFCBz11TpKFAuRo6BoxLyp6CRFrMq4czcbgoyTTSZ6CpTKNeA0mV8q7VcD+E/iwWn5kvsYmCxHes9dPeP71XqfW+JYNTg4tb3PkXE8I6NZx6N2+qN+PLfpzcuGvcduIU1JO+6V0+djDtaVuj+nQ1cViLxXp7c/sZ1KGeol1Zsweii7q5BoQsrAZKAFYwrARogSBJUMhUMEGQyEiOAyKfFoZqajzc1b2bLaC4p7geTRbwdC7TfXQ4yhlnl6S+V/0NXh8VmXhqVvqLYzdek4ZRSSN7DRMPDVLI2+HST/Q5snZj6bGDgbFGBQwdtDdw0L2KaW25U4l2mxJ07AiWnpDtUjoZ9eJoSTaKNcjKEqjVjofN+3eCy1Y1FzaXqfRqtSzPMdtcOp4eT5xtL5k4XVRnN418pnLT9/v+SzwWlepmf5U/d6FKro/W56Hh9HJTS66vzZ1xxLDFY7FaJQUVjsVgKAIAkqGFQwQMR0Kh0AbHKviIw3v6K+h1M/iNN3Ulz0sVyulscdqHFLOanHVSinfxWjX0O/C5O7ZRrx19dujNTg9K68yMr6WxmslpYirKWWK2LVD48dk15qTOtOn8OWZ6JmzhO0lGCd05ZVd5YOVl57GXl8Rr4z+1nw4xiYbO/mj1HZ3tTUbUakV5phwPH+HYiKzJRbnkTnDJ37XtmWidurHx/CIQeemVyv0vjPivZU8WprRi4nEqCva553gmJlLQucTcrZTPbTxZXF+0+Ig7U1Fq3NGI+02Jk1m08ly8b+puyoUoLNVlZbu7SXqxocS4bZf4tNPk8/pe+1jSZfTO4/bAfF6v4r3122v5rU0sZWVfCycedOSa6StsbMYUmrpQkt00ov5iTwkFGWWKjda2VrlblKtJZ/Xw6jTzziuTa9uZ6Wx07Hdnv7RiJZnlp0szk/G9oxXpc1+NcOpRUnRU4um1mjO/eg3ZTi/PQ6POS6c048rPJhgCA0ZFYrHAwEIQgS5oYAwQMRxEMA6G+Dmt/ti5fNpCItYN6+cZQ9bXj9/Ypn014u3l+IfjZrdn3qkZfEI99+pe4HUtJFb0tP2fQf7pjVp2tyKOH4PGEZUakVZpq7vF2fSSN/gtW8UbioJ8l7HPux0ajx3Z3s3QoVfjNOpJJqKlkcVdNXaS7zs/Ba7G3hsB8KlOEpZo/ipaZcie9Pd3iuXTbaxt0sKlyXsjI7QV7WXK5NytJJOh7M0/wDEvybNzFUFKbXW/vyMns27tM3MTFZiqXieP8A+LGUZbtLK282VqV9F46X5lTsp2XlRlnry+Io05U6dJNzhFTd5N5kklvolzbPpMsNGavz5nKHD49Eay2T0zsl7eN4V2ecKjlC8It3yptx9FyNrGwUY2Nt4dRPPceq5Yt9E37Izva7O/wDzrhUf7NUqykryrzko6crRu/6XbzOfaOivh1ZPlh5r/tmjlXyL3ZfCOlTpw6xi35tXZj9ucTlpRgv8yo21/shr9ZL2Jn5Zn6YX/HiSBAdjgBgCAAMgGyAc0MhUEB0EVDAFHSnO2+qe/wBmvFHNBIs2mXV2zuJU7rNvdtrrYrcPqWl6mtUw6fNr2MvFUslTTaya/foU1ZGnlLX0fs7itFqe0wc7o+XcAxNrHvOGYvRHNlNV1Y3cehb0PFdo6spVskfyrM/DoepnX7rfgfOMRxVwxFZzT/Fdabqy267CJe77L033TXxj1PH9ju1VOa6STtZ6e/Q2K/aWlOt8O0k975J5W+ilaz9yLEx6bAy7voWXJFPDq0V5EqVbFpdKWJjKp5XiT+JLJ/qeX0e5p8QxOljzs+KUqNVSqt6pqNlezVtWR3U9R6a9rNRV4rLFXVlpu34HzHtPxBVq/dd4QXw4vrZ3lL1bfpY2e0napVIOlRb7ytKdsvd5xj59TyNjbiw17rDm5JfxhUFhYrN3OAGFisAAIQBBhRkwChkCIQCFCoZAEo8VhpGXR29H/BeRxx0L05Lwv6rUipjrwioey4XiDwHDK1rHreGVjmzjrwr2FOveJRxWDhPdIqPFOMHLV2V9FfYxv/pU9VovFpFJGvb1nD+z9GFNVVTjmUrp23Sa0PSSowzZnFXWzstH4HgOGdr7XjnjKNtL5HaXK3iaGH7WXeslLrZr7Bbwr2yqletMy8DxmFV2i9UrtdEy7OWhFUUcYfPu0lbNXy8oxS9Xq/se54piVGLb5Jv0R81rVXOTm95Nv3NeGe9see+tOZAkOlygBhAwAwMIAFRCXIBzCRBAiHEQ4EQwoUAyZS4tiHCGm8nl8lzLhT4vGLpO7tZpr/l0+oGdhax6XheKd0eMjKxrcJx+V2Zlli2wzfRsNW003KVWcc3eglrq1FWfiDhlVO1mb9DAxnuc/TrxysccG8Na7UNvvvcsOnRm+7GLXlmXoaVHs5Qerir9bIs/3UoaRDS81qpg8PGH4YqPkkjrXr2Q9SGVank+0naCNJW3fJLdkSW1lbr3VHttxZqMacXrKSv/AMFv87L3MEyKmLdWsqk3fVeSS2S8Ea52YY+M04s8vK7QFgkZZQrAMKAoGFgAQASBIDIRDoIQYAQIFAsFAEy+PN2guV376f8ApqFHjVK9O/8Apd/R6foBghTISxA2OD8clSaUtUfQ+CcdhNJqS9z5GdKNaUXeMmn4OxnlxytcOWx9+ocTXU71eLxS1aPhMOO4lK3xX8mcq+PrVNJ1JNbWzWXqkU/5X5aXmnw+h9qu28VenRanLZyveMX5834I+e18ROpJylJtvm/t0OUKfqddFubY4TFjlncgirG/Qd4p+CPPrXX2N/DtZVZ3skiyjoBhAwAKwsAAAFgAVkIQBEFAQQHQRUMAQoBXxONhDd3fRasCyZXF8ZFxyRd9bu21lyuVcXxCc9Nl0XPzZTIEQbChQBQUl1Jn6oPd8QGil1GzrzEWXxGUlyTAdTb2RLW3Am34BUSQ0Zcyxh67g7rmVrjXA2MPjoy0ej+XuWjz/IajiZw2enTdAborKVHiUXpLuv3RcUk9UBGwMjAArYA2IAoQFevjYx03fh+oFtI418ZCG716LVmZXxs5aLurw/UrZQLOJ4jOWi7q8N/cp2OmUKRA5IDR1cQNdQOQUGUQIBrESCpDKxIkUOgKwcyAYlgKRNQIhogSDcAsDJcFwA0NSrSjs7fQWxLAX6PEV+ZW8VsXYVE1dO5hNEjJrZteQG6AzKfEJL8ST+TIByrYuUvBdEcQDICIlgkAFgpECAA2IQBXHp7CNLyOxGgOSpkdMfITL+7gL8IaMPAOT93YcoBRCWCAGQhAJYlgkAALBABABAAGQhAECQKAKIQgEIQgEIQgDEAQAhQCAEjJcgEIQgEQSAAICEYEAQgAIQgACAgChIQBgERAIQjJcCERGRAEhEQAkIQCBAQAkIRAEBCAEBGQAEAwgABCAQhCAf/Z" class="character" />
+      </div>
+    </a>
+    
+    <a href="https://www.mythrillfiction.com/force-mage" alt="Mythrill" target="_blank">
+      <div class="card">
+        <div class="wrapper">
+          <img src="https://ggayane.github.io/css-experiments/cards/force_mage-cover.jpg" class="cover-image" />
+        </div>
+        <img src="https://ggayane.github.io/css-experiments/cards/force_mage-title.png" class="title" />
+        <img src="https://ggayane.github.io/css-experiments/cards/force_mage-character.webp" class="character" />
+      </div>
+    </a>
+    <h3>컴포넌트 사용 범위</h3>
+    ✔️ 전역 컴포넌트 : <b>여러 컴포넌트</b>에서 유효<br />
+    ✔️ 지역 컴포넌트 : <b>특정 컴포넌트</b>에서만 유효<br />
+    <hr />
+    <div id="appBasic">
+      <hello></hello>
+      <!-- hello 컴포넌트 사용 -->
+    </div>
+
+    <div id="appBasic2">
+      <world style="color: red"></world>
+      <!-- world 컴포넌트 사용 -->
+      <world style="color: blue"></world>
+    </div>
+
+    <script>
+      const { createApp } = Vue; // Vue 클래스 내에서 createApp 메소드를 호출
+
+      const appBasic = createApp({}); // 첫 번째 Vue Application Instance
+      // 사용자 정의 태그 생성
+      // xxx.component(컴포넌트명, 옵션);  컴포넌트 명을 component 함수의 첫 번째 인수로 전달
+      appBasic.component("hello", {
+        // hello 컴포넌트를 전역으로 선언
+        template: "<h3>{{title}}</h3>", // 컴포넌트의 템플릿을 정의하는 위치(html,css 등의 마크업을 정의) -> 15행 hello 컴포넌트에 들어감.
+        data() {
+          // template에 들어갈 데이터 선언?
+          return {
+            title: "헬로!", // 컴포넌트의 Local Data를 정의
+          };
+        },
+      });
+
+      // 마운트 결과를 출력
+      appBasic.mount("#appBasic");
+
+      const appBasic2 = createApp({}); // 두 번째 Vue Application Instance
+      appBasic2.component("world", {
+        template:
+          "<h3>{{title}}&nbsp;<button @click='changeTitle'>🎵타이틀 변경🎵</button></h3>",
+        // 컴포넌트 템플릿과 이벤트 포함
+        data() {
+          return {
+            title: "안녕!", // 컴포넌트의 local data를 정의
+          };
+        },
+        methods: {
+          changeTitle() {
+            this.title = "세계"; // 버튼별로 this.title 수정
+          },
+        },
+      });
+      appBasic2.mount("#appBasic2");
+    </script>
+    <hr />
+    <div id="app">
+        <div>컴포넌트 등록 1</div>
+        <my-global-component></my-global-component>
+        <my-local-component></my-local-component>
+    </div>
+    <hr>   
+    <div id="app2">
+        <div>컴포넌트 등록 2</div>
+        <my-global-component></my-global-component>
+        <my-local-component></my-local-component>
+    </div> 
+    <hr>
+    <div id="app3">
+        <div>컴포넌트 등록 3</div>
+        <my-global-component></my-global-component>
+        <my-local-component></my-local-component>
+    </div>
+    <script>
+        // 전역 컴포넌트를 등록하는 공용 컴포넌트를 정의 
+        const myGlobalComponent = {
+            template:"<b>전역 컴포넌트가 등록</b>",
+        }
+        const app = Vue.createApp({
+            components:{
+                'my-global-component' : myGlobalComponent, //전역 컴포넌트 등록 
+                'my-local-component' : {
+                    template:"<br>지역 컴포넌트가 등록</br>",// 지역 컴포넌트 등록
+                },
+            },
+        });
+        app.mount('#app');
+
+        const app2 = Vue.createApp({
+            components:{
+                'my-global-component' : myGlobalComponent, //전역 컴포넌트 등록 
+                'my-local-component' : {
+                    template:"<br>지역 컴포넌트가 등록2</br>",// 지역 컴포넌트 등록
+                },
+            },
+        });
+        app2.mount('#app2');
+
+        const app3 = Vue.createApp({
+            components:{
+                'my-global-component' : myGlobalComponent, //전역 컴포넌트 등록 
+                'my-local-component' : {
+                    template:"<br>지역 컴포넌트가 등록3</br>",// 지역 컴포넌트 등록
+                },
+            },
+        });
+        app3.mount('#app3');
+        
+
+    </script>
+  </body>
+</html>

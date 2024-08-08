@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- jQuery 라이브러리 로딩 : CDN -->
+    <script src="https://code.jquery.com/jquery-latest.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $("#msg").text("jQuery로 메세지 출력");
+      });
+    </script>
+
+    <!-- vue3 라이브러리 로딩  : CDN-->
+    <script src="https://unpkg.com/vue@3"></script>
+  </head>
+  <body>
+    환영합니다 덥네요<br />
+    JQuery 출력 결과 : <span id="msg"></span>
+    <hr />
+    vue 출력 1 :
+    <!-- 데이터 바인딩의 기본 형태는 Mustache(텍스트 보간) 구문을 사용  -->
+    <span id="app1">{{msg}}</span>
+    <!-- MVVM 패턴에서 View-->
+    <script>
+      let hi = { msg: "뷰 세계 방문" }; // 데이터 객체 정의 MVVM 패턴에서 Model
+
+      Vue.createApp({
+        // MVVM 패턴에서 ViewModel
+
+        // Vue.createApp()에 의해 생성된 객체를 어플리케이션 인스턴스라고 함.
+        data() {
+          return hi;
+        },
+      }).mount("#app1"); // id="app1" 요소에 마운트(DOM 요소에 연결 - 랜더링)
+    </script>
+
+    <hr />
+    vue 출력 2:
+    <div id="app2">{{message1}}&nbsp;{{message2}}&nbsp;{{message3}}</div>
+    <button @click="updateMessage">메세지변경</button>
+    <script>
+      // Vue3는 Vue2와 달리 생성자가 아니라 createApp 함수를 이용해 어플리케이션을 인스턴스 함
+      const { createApp } = Vue;
+      createApp({
+        data() {
+          return {
+            message1: "안녕 보현",
+            message2: "반가워" + "보현",
+            message3: Math.random() * 9,
+          };
+        },
+        // 라이프 사이클 관련 메소드 일부 확인
+        // 메소드 내에서 실행되는 custom logic을 cycle hook 이라고 한다
+        beforeCreate() {
+          // 초기화 담당
+          console.log(
+            "beforeCreate : 인스턴스가 생성되고 나서 가장 처음으로 실행 "
+          );
+        },
+        created() {
+          // 화면에 반응성 주입
+          console.log("created : 아직 화면 요소에 인스턴스가 부착되기전 ");
+        },
+        mounted() {
+          // 속성 값 대입
+          console.log(
+            "mounted : 지정한 화면 요소에 인스턴스가 부착되고 난 후 호출되는 단계로 template 속성에서 정의한 화면 요소에 접근 가능 "
+          );
+        },
+        beforeUpdate() {
+          // 인스턴스의 데이터 변경
+          console.log(
+            "beforeUpdate :  지정한 화면 요소에 인스턴스가 부착되고 난 후에 인스턴스 속성들이 화면에 치환"
+          );
+        },
+        updated() {
+          console.log(
+            "updated : beforeUpdate가 끝나고 화면에 다시 그리고 나면 실행되는 단계"
+          );
+        },
+        methods: {
+          updateMessage(){
+            this.message1="hello";
+            this.message2="good";
+            this.message3=Math.random() * 90;
+          }
+        },
+      }).mount("#app2");
+      </script>
+      <button class="button">
+        <div class="trash">
+            <div class="top">
+                <div class="paper"></div>
+            </div>
+            <div class="box"></div>
+            <div class="check">
+                <svg viewBox="0 0 8 6">
+                    <polyline points="1 3.4 2.71428571 5 7 1"></polyline>
+                </svg>
+            </div>
+        </div>
+        <span>Trash This</span>
+      </button><style>
+        .button {
+       --background: #2b3044;
+       --background-hover: #1e2235;
+       --text: #fff;
+       --shadow: rgba(0, 9, 61, .2);
+       --paper: #5c86ff;
+       --paper-lines: #fff;
+       --trash: #e1e6f9;
+       --trash-lines: #bbc1e1;
+       --check: #fff;
+       --check-background: #5c86ff;
+       position: relative;
+       border: none;
+       outline: none;
+       background: none;
+       padding: 10px 24px;
+       border-radius: 7px;
+       min-width: 142px;
+       -webkit-appearance: none;
+       -webkit-tap-highlight-color: transparent;
+       cursor: pointer;
+       display: flex;
+       color: var(--text);
+       background: var(--btn, var(--background));
+       box-shadow: 0 var(--shadow-y, 4px) var(--shadow-blur, 8px) var(--shadow);
+       transform: scale(var(--scale, 1));
+       transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+      }
+      .button span {
+       display: block;
+       font-size: 14px;
+       line-height: 25px;
+       font-weight: 600;
+       opacity: var(--span-opacity, 1);
+       transform: translateX(var(--span-x, 0)) translateZ(0);
+       transition: transform 0.4s ease var(--span-delay, 0.2s), opacity 0.3s ease var(--span-delay, 0.2s);
+      }
+      .button .trash {
+       display: block;
+       position: relative;
+       left: -8px;
+       transform: translate(var(--trash-x, 0), var(--trash-y, 1px)) translateZ(0) scale(var(--trash-scale, 0.64));
+       transition: transform 0.5s;
+      }
+      .button .trash:before, .button .trash:after {
+       content: '';
+       position: absolute;
+       height: 8px;
+       width: 2px;
+       border-radius: 1px;
+       background: var(--icon, var(--trash));
+       bottom: 100%;
+       transform-origin: 50% 6px;
+       transform: translate(var(--x, 3px), 2px) scaleY(var(--sy, 0.7)) rotate(var(--r, 0deg));
+       transition: transform 0.4s, background 0.3s;
+      }
+      .button .trash:before {
+       left: 1px;
+      }
+      .button .trash:after {
+       right: 1px;
+       --x: -3px;
+      }
+      .button .trash .top {
+       position: absolute;
+       overflow: hidden;
+       left: -4px;
+       right: -4px;
+       bottom: 100%;
+       height: 40px;
+       z-index: 1;
+       transform: translateY(2px);
+      }
+      .button .trash .top:before, .button .trash .top:after {
+       content: '';
+       position: absolute;
+       border-radius: 1px;
+       background: var(--icon, var(--trash));
+       width: var(--w, 12px);
+       height: var(--h, 2px);
+       left: var(--l, 8px);
+       bottom: var(--b, 5px);
+       transition: background 0.3s, transform 0.4s;
+      }
+      .button .trash .top:after {
+       --w: 28px;
+       --h: 2px;
+       --l: 0;
+       --b: 0;
+       transform: scaleX(var(--trash-line-scale, 1));
+      }
+      .button .trash .top .paper {
+       width: 14px;
+       height: 18px;
+       background: var(--paper);
+       left: 7px;
+       bottom: 0;
+       border-radius: 1px;
+       position: absolute;
+       transform: translateY(-16px);
+       opacity: 0;
+      }
+      .button .trash .top .paper:before, .button .trash .top .paper:after {
+       content: '';
+       width: var(--w, 10px);
+       height: 2px;
+       border-radius: 1px;
+       position: absolute;
+       left: 2px;
+       top: var(--t, 2px);
+       background: var(--paper-lines);
+       transform: scaleY(0.7);
+       box-shadow: 0 9px 0 var(--paper-lines);
+      }
+      .button .trash .top .paper:after {
+       --t: 5px;
+       --w: 7px;
+      }
+      .button .trash .box {
+       width: 20px;
+       height: 25px;
+       border: 2px solid var(--icon, var(--trash));
+       border-radius: 1px 1px 4px 4px;
+       position: relative;
+       overflow: hidden;
+       z-index: 2;
+       transition: border-color 0.3s;
+      }
+      .button .trash .box:before, .button .trash .box:after {
+       content: '';
+       position: absolute;
+       width: 4px;
+       height: var(--h, 20px);
+       top: 0;
+       left: var(--l, 50%);
+       background: var(--b, var(--trash-lines));
+      }
+      .button .trash .box:before {
+       border-radius: 2px;
+       margin-left: -2px;
+       transform: translateX(-3px) scale(0.6);
+       box-shadow: 10px 0 0 var(--trash-lines);
+       opacity: var(--trash-lines-opacity, 1);
+       transition: transform 0.4s, opacity 0.4s;
+      }
+      .button .trash .box:after {
+       --h: 16px;
+       --b: var(--paper);
+       --l: 1px;
+       transform: translate(-0.5px, -16px) scaleX(0.5);
+       box-shadow: 7px 0 0 var(--paper), 14px 0 0 var(--paper), 21px 0 0 var(--paper);
+      }
+      .button .trash .check {
+       padding: 4px 3px;
+       border-radius: 50%;
+       background: var(--check-background);
+       position: absolute;
+       left: 2px;
+       top: 24px;
+       opacity: var(--check-opacity, 0);
+       transform: translateY(var(--check-y, 0)) scale(var(--check-scale, 0.2));
+       transition: transform var(--check-duration, 0.2s) ease var(--check-delay, 0s), opacity var(--check-duration-opacity, 0.2s) ease var(--check-delay, 0s);
+      }
+      .button .trash .check svg {
+       width: 8px;
+       height: 6px;
+       display: block;
+       fill: none;
+       stroke-width: 1.5;
+       stroke-dasharray: 9px;
+       stroke-dashoffset: var(--check-offset, 9px);
+       stroke-linecap: round;
+       stroke-linejoin: round;
+       stroke: var(--check);
+       transition: stroke-dashoffset 0.4s ease var(--checkmark-delay, 0.4s);
+      }
+      .button.delete {
+       --span-opacity: 0;
+       --span-x: 16px;
+       --span-delay: 0s;
+       --trash-x: 46px;
+       --trash-y: 2px;
+       --trash-scale: 1;
+       --trash-lines-opacity: 0;
+       --trash-line-scale: 0;
+       --icon: #fff;
+       --check-offset: 0;
+       --check-opacity: 1;
+       --check-scale: 1;
+       --check-y: 16px;
+       --check-delay: 1.7s;
+       --checkmark-delay: 2.1s;
+       --check-duration: 0.55s;
+       --check-duration-opacity: 0.3s;
+      }
+      .button.delete .trash:before, .button.delete .trash:after {
+       --sy: 1;
+       --x: 0;
+      }
+      .button.delete .trash:before {
+       --r: 40deg;
+      }
+      .button.delete .trash:after {
+       --r: -40deg;
+      }
+      .button.delete .trash .top .paper {
+       animation: paper 1.5s linear forwards 0.5s;
+      }
+      .button.delete .trash .box:after {
+       animation: cut 1.5s linear forwards 0.5s;
+      }
+      .button.delete, .button:hover {
+       --btn: var(--background-hover);
+       --shadow-y: 5px;
+       --shadow-blur: 9px;
+      }
+      .button:active {
+       --shadow-y: 2px;
+       --shadow-blur: 5px;
+       --scale: 0.94;
+      }
+      @keyframes paper {
+       10%, 100% {
+         opacity: 1;
+      }
+       20% {
+         transform: translateY(-16px);
+      }
+       40% {
+         transform: translateY(0);
+      }
+       70%, 100% {
+         transform: translateY(24px);
+      }
+      }
+      @keyframes cut {
+       0%, 40% {
+         transform: translate(-0.5px, -16px) scaleX(0.5);
+      }
+       100% {
+         transform: translate(-0.5px, 24px) scaleX(0.5);
+      }
+      }
+      html {
+       box-sizing: border-box;
+       -webkit-font-smoothing: antialiased;
+      }
+      * {
+       box-sizing: inherit;
+      }
+      *:before, *:after {
+       box-sizing: inherit;
+      }
+      
+      body .twitter {
+       position: fixed;
+       display: block;
+       right: 16px;
+       bottom: 16px;
+      }
+      body .twitter svg {
+       width: 32px;
+       height: 32px;
+       fill: #1da1f2;
+      }
+      
+      </style>
+      <script>
+        document.querySelectorAll('.button').forEach(button => button.addEventListener('click', e => {
+            if(!button.classList.contains('delete')) {
+                button.classList.add('delete');
+                setTimeout(() => button.classList.remove('delete'), 3200);
+            }
+            e.preventDefault();
+        }));
+      
+        </script>
+
+
+
+
+
+
+
+      <div class="slide-container">
+        <span id="slider1"></span>
+        <span id="slider2"></span>
+        <span id="slider3"></span>
+        <span id="slider4"></span>
+        <span id="slider5"></span>
+        <div class="image-container">
+          <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDAzMjJfODUg%2FMDAxNzExMDkyNzAxOTE2.C_2ifnZh5lRvneJP6iLdQNCaSWUIl3H4iMe1s8lpGkEg.gSLBUdkvWRABQzaskjAo1FiyeUeimpJ0zkLhKcRocPkg.JPEG%2F20240322%25A3%25DF160919312.jpg&type=a340" alt="" class="slider-image one">
+          <img src="https://search.pstatic.net/sunny/?src=https%3A%2F%2Fi.namu.wiki%2Fi%2FgeGngQMnvmK2g3wuKU4O1uNs8Ix1HXQULk9PrnT57lHOlU4AxL9qsNCYXOOY9DIqPWtXnphq8G6NzCcvzv-ppQ.webp&type=a340" alt="" class="slider-image two">
+          <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzA0MDhfMjY5%2FMDAxNjgwOTUzNzg4NTM5.-2_-jU-CWlFRlE22pxWz6caJLA1FBVOIofcrrbvOycgg.8lTGzqV85VJtNFu9XKnvWE44CRzzYm3OLw8bsOjcJvEg.JPEG.15jiyoon%2F%25B4%25D9%25BF%25EE%25B7%25CE%25B5%25E5%25C6%25C4%25C0%25CF%25A3%25AD78.jpg&type=a340" alt="" class="slider-image three">
+          <img src="https://images.unsplash.com/photo-1556228578-626e9590b81f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80" alt="" class="slider-image four">
+          <img src="https://images.unsplash.com/photo-1556228454-1690896f350c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80" alt="" class="slider-image five">
+        </div>
+        <div class="button-container">
+          <a href="#slider1" class="slider-button"></a>
+          <a href="#slider2" class="slider-button"></a>
+          <a href="#slider3" class="slider-button"></a>
+          <a href="#slider4" class="slider-button"></a>
+          <a href="#slider5" class="slider-button"></a>
+        </div>
+      </div>
+      <style>
+       
+    .slide-container {
+      margin: 50vh auto 0 auto;
+      transform: translateY(-50%);
+      width: 600px;
+      height: 450px;
+      overflow: hidden;
+    }
+    img {
+      width: 20%;
+    }
+    
+    .image-container {
+      display: inline-block;
+      width: 3000px;
+      height: 400px;
+      position: relative;
+      transition: left 1s;
+      
+      animation: slide 15s infinite;
+    }
+    .slider-image {
+      float: left;
+    }
+    
+    .button-container {
+      position: relative;
+      top: 10px;
+    }
+    
+    .slider-button {
+      height: 10px;
+      width: 10px;
+      margin: 4px;
+      display: inline-block;
+      border-radius: 5px;
+      background-color: rgba(white, 0.5);
+    }
+    .slider-button:hover {
+      background-color: rgba(white, 0.7);
+    }
+    
+    #slider1:target ~ .image-container {
+      left: 0px;
+    }
+    #slider2:target ~ .image-container {
+      left: -600px;
+    }
+    #slider3:target ~ .image-container {
+      left: -1200px;
+    }
+    #slider4:target ~ .image-container {
+      left: -1800px;
+    }
+    #slider5:target ~ .image-container {
+      left: -2400px;
+    }
+    
+    .image-container:hover {
+       animation: slide 10s infinite;
+    }
+    
+    @keyframes slide {
+      0% {
+          left: 0;
+      }
+      20% {
+          left: -600px;
+      }
+      40% {
+          left: -1200px;
+      }
+      60% {
+          left: -1800px;
+      }
+      80% {
+          left: -2400px;
+      }
+      100% {
+          left: 0;
+      }
+    }
+      </style>
+    
+    <link href="https://fonts.googleapis.com/css?family=PT+Sans|Ubuntu:500&display=swap" rel="stylesheet">
+  
+    <div class="container">
+        <button class="add-to-cart-button">
+             <svg class="add-to-cart-box box-1" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                 <rect width="24" height="24" rx="2" fill="#ffffff"/>
+             </svg>
+             <svg class="add-to-cart-box box-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                 <rect width="24" height="24" rx="2" fill="#ffffff"/>
+             </svg>
+             <svg class="cart-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                 <circle cx="9" cy="21" r="1"></circle>
+                 <circle cx="20" cy="21" r="1"></circle>
+                 <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+             </svg>
+             <svg class="tick" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                 <path fill="none" d="M0 0h24v24H0V0z"/>
+                 <path fill="#ffffff" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM9.29 16.29L5.7 12.7c-.39-.39-.39-1.02 0-1.41.39-.39 1.02-.39 1.41 0L10 14.17l6.88-6.88c.39-.39 1.02-.39 1.41 0 .39.39.39 1.02 0 1.41l-7.59 7.59c-.38.39-1.02.39-1.41 0z"/>
+             </svg>
+             <span class="add-to-cart">Add to cart</span>
+             <span class="added-to-cart">Added to cart</span>
+         </button>
+     </div>
+     <style>
+      body {
+          margin: 0;
+      }
+  
+      .container {
+          align-items: center;
+          display: flex;
+          justify-content: center;
+          height: 100vh;
+      }
+  
+      .add-to-cart-button {
+          background: #254ee4;
+          border: none;
+          border-radius: 4px;
+          box-shadow: 0 3px 13px -2px rgba(0, 0, 0, 0.15);
+          color: #ffffff;
+          display: flex;
+          font-family: "Ubuntu", sans-serif;
+          justify-content: space-around;
+          min-width: 195px;
+          overflow: hidden;
+          outline: none;
+          padding: 0.8rem;
+          position: relative;
+          text-transform: uppercase;
+          transition: 0.4s ease;
+          width: auto;
+      }
+  
+      .add-to-cart-button:active {
+          box-shadow: 0 0 0 0.2rem rgba(37, 78, 228, 0.45);
+          transform: translateY(4px);
+      }
+  
+      .add-to-cart-button:hover {
+          cursor: pointer;
+      }
+  
+      .add-to-cart-button:hover, .add-to-cart-button:focus {
+          box-shadow: 0 0 0 0.2rem rgba(37, 78, 228, 0.45);
+          transform: translateY(-1px);
+      }
+  
+      .add-to-cart-button.added {
+          background: #254ee4;
+          box-shadow: 0 0 0 0.2rem rgba(37, 78, 228, 0.45);
+      }
+  
+      .add-to-cart-button.added .add-to-cart {
+          display: none;
+      }
+  
+      .add-to-cart-button.added .added-to-cart {
+          display: block;
+      }
+  
+      .add-to-cart-button.added .cart-icon {
+          animation: drop 0.3s forwards;
+          -webkit-animation: drop 0.3s forwards;
+          -webkit-animation-delay: 0.18s;
+          animation-delay: 0.18s;
+      }
+  
+      .add-to-cart-button.added .box-1,
+      .add-to-cart-button.added .box-2 {
+          top: 18px;
+      }
+  
+      .add-to-cart-button.added .tick {
+          animation: grow 0.6s forwards;
+          -webkit-animation: grow 0.6s forwards;
+          -webkit-animation-delay: 0.7s;
+          animation-delay: 0.7s;
+      }
+  
+      .add-to-cart,
+      .added-to-cart {
+          margin-left: 36px;
+      }
+  
+      .added-to-cart {
+          display: none;
+          position: relative;
+      }
+  
+      .add-to-cart-box {
+          height: 5px;
+          position: absolute;
+          top: 0;
+          width: 5px;
+      }
+  
+      .box-1,
+      .box-2 {
+          transition: 0.4s ease;
+          top: -8px;
+      }
+  
+      .box-1 {
+          left: 23px;
+          transform: rotate(45deg);
+      }
+  
+      .box-2 {
+          left: 32px;
+          transform: rotate(63deg);
+      }
+  
+      .cart-icon {
+          left: 15px;
+          position: absolute;
+          top: 8px;
+      }
+  
+      .tick {
+          background: #254ee4;
+          border-radius: 50%;
+          position: absolute;
+          left: 28px;
+          transform: scale(0);
+          top: 5px;
+          z-index: 2;
+      }
+  
+      @-webkit-keyframes grow {
+          0% {
+              -webkit-transform: scale(0);
+          }
+          50% {
+              -webkit-transform: scale(1.2);
+          }
+          100% {
+              -webkit-transform: scale(1);
+          }
+      }
+  
+      @keyframes grow {
+          0% {
+              transform: scale(0);
+          }
+          50% {
+              transform: scale(1.2);
+          }
+          100% {
+              transform: scale(1);
+          }
+      }
+  
+      @-webkit-keyframes drop {
+          0% {
+              -webkit-transform: translateY(0px);
+          }
+          100% {
+              -webkit-transform: translateY(1px);
+          }
+      }
+  
+      @keyframes drop {
+          0% {
+              transform: translateY(0px);
+          }
+          100% {
+              transform: translateY(1px);
+          }
+      }
+  </style>
+  <script>
+    document.querySelectorAll('.add-to-cart-button').forEach(function(addToCartButton) {
+        addToCartButton.addEventListener('click', function() {
+            addToCartButton.classList.add('added');
+            setTimeout(function(){
+                addToCartButton.classList.remove('added');
+            }, 2000);
+        });
+    });
+</script>
+
+
+
+
+  </body>
+</html>

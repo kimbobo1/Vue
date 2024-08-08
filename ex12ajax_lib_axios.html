@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+ 
+</head>
+<body>
+    <div class="gtranslate_wrapper">
+        <script>window.gtranslateSettings = {"default_language":"ko","detect_browser_language":true,"languages":["ko","en","ja","zh-CN","fr","es","de"],"wrapper_selector":".gtranslate_wrapper","flag_size":24,"horizontal_position":"right","vertical_position":"top"}</script>
+        <script src="https://cdn.gtranslate.net/widgets/latest/flags.js
+        " defer></script>
+    </div>
+    <script>
+        (function(d, s, id) {
+            if (d.getElementById(id)) {
+                if (window.__TOMORROW__) {
+                    window.__TOMORROW__.renderWidget();
+                }
+                return;
+            }
+            const fjs = d.getElementsByTagName(s)[0];
+            const js = d.createElement(s);
+            js.id = id;
+            js.src = "https://www.tomorrow.io/v1/widget/sdk/sdk.bundle.min.js";
+
+            fjs.parentNode.insertBefore(js, fjs);
+        })(document, 'script', 'tomorrow-sdk');
+        </script>
+
+        <div class="tomorrow"
+           data-location-id="065321"
+           data-language="KO"
+           data-unit-system="METRIC"
+           data-skin="dark"
+           data-widget-type="upcoming"
+           style="padding-bottom:22px;position:relative;"
+        >
+          <a
+            href="https://www.tomorrow.io/weather-api/"
+            rel="nofollow noopener noreferrer"
+            target="_blank"
+            style="position: absolute; bottom: 0; transform: translateX(-50%); left: 50%;"
+          >
+            <img
+              alt="Powered by the Tomorrow.io Weather API"
+              src="https://weather-website-client.tomorrow.io/img/powered-by.svg"
+              width="250"
+              height="18"
+            />
+          </a>
+        </div>
+
+    <div id="app">
+        <button @click="fetchData"> 도서관 자료 읽기</button>
+        <button @click="clearData"> 도서관 자료 지우기</button>
+
+        <div v-for="(lib, index) in libraries" :key="index">
+            <h3>{{lib.LBRRY_NAME}}</h3>
+            <br>{{lib.CODE_VALUE}}</br>
+            <br>{{lib.ADRES}}</br>
+
+        </div>
+    </div>
+    <script>
+        const {createApp} = Vue;
+        createApp({
+            data(){
+                return{
+                    libraries:[]
+                }
+            },
+            methods: {
+                fetchData(){
+                    axios.get('https://raw.githubusercontent.com/pykwon/python/master/seoullibtime5.json')
+                    .then(response =>{
+                       this.libraries = response.data.SeoulLibraryTime.row;
+                    })
+                   
+                    .catch(error => {
+                        console.log('읽기 오류 :',error);
+                    });
+                },
+                clearData(){
+                    this.libraries = [];
+                }
+            },
+        }).mount("#app");
+    </script>
+</body>
+</html>
+</body>
+</html>
